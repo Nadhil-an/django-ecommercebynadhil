@@ -22,3 +22,18 @@ def store(request, category_slug =None):
         'product_count':product_count
     }
     return render(request,'store.html',context)
+
+
+
+def product_details(request, category_slug, product_slug):
+    try:
+        single_product = Product.objects.get(category__slug=category_slug, slug=product_slug)
+    except Product.DoesNotExist:
+        # You can show a 404 page instead of crashing the server
+        single_product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
+
+    context = {
+        "single_product": single_product
+    }
+    return render(request, 'product_details.html', context)
+
