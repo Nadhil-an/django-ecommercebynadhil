@@ -17,10 +17,10 @@ def _cart_id(request):
     return cart
 
 def add_cart(request,product_id):
-    product = Product.object.get(id=product_id)
+    product = Product.objects.get(id=product_id)
 
     try:
-        cart = Cart.objects.get(card_id = _cart_id(request))
+        cart = Cart.objects.get(cart_id = _cart_id(request))
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id = _cart_id(request))
         cart.save()
@@ -39,5 +39,19 @@ def add_cart(request,product_id):
 
 
 # Create your views here.
-def cart(request):
-    return render(request,'cart.html')
+def cart(request, total=0, quantity=0, cart_item=None):
+    
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+    for cart_item in cart_items:
+        total +=(cart_item.quantity * cart_item.product.price)
+        quantity += cart_item.quantity
+    
+
+    context = {
+        'total'     : total,
+        'quantity'  : quantity,
+        'cart_item' : cart_item
+    }
+    
+    return render(request,'cart.html',context)  
