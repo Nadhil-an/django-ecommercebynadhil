@@ -133,11 +133,11 @@
                     <div class="fix-height">
                         <a href="{{ product.get_url }}" class="title">{{product.product_name}}</a>
                         <div class="price-wrap mt-2">
-                            <span class="price">{{product.price}}</span>
+                            <span class="price">${{product.price}}</span>
                             
                         </div> <!-- price-wrap.// -->
                     </div>
-                    <a href="#" class="btn btn-block btn-success">Added to cart </a>
+                    <a href="{% url 'cart' %}" class="btn btn-block btn-success">Added to cart </a>
                 </figcaption>
             </figure>
         </div> <!-- col.// -->
