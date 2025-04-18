@@ -34,6 +34,7 @@ def add_cart(request,product_id):
         cart_item.save()
         
 
+
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(product=product,
                                             quantity = 1,
