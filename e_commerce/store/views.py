@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from . models import Product
 from catergory.models import Category
+from cart.views import add_cart
 
 # Create your views here.
 
@@ -20,6 +21,7 @@ def store(request, category_slug =None):
     context = {
         'products':products,
         'product_count':product_count
+        
     }
     return render(request,'store.html',context)
 

@@ -36,22 +36,22 @@ def add_cart(request,product_id):
 
 
 
-# Create your views here.
 def cart(request, total=0, quantity=0, cart_item=None):
-
-    session_key = _cart_id(request)
     
-    cart = Cart.objects.get(cart_id=session_key)
+    session_key = _cart_id(request) 
+    cart = Cart.objects.get(cart_id=session_key)   
     cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-    for cart_item in cart_items:
-        total +=(cart_item.quantity * cart_item.product.price)
-        quantity += cart_item.quantity
-
-
+    
+    for cart_item in cart_items:   
+        item_total = cart_item.quantity * cart_item.product.price
+        cart_item.total = item_total  
+        total += item_total  
+        quantity += cart_item.quantity  
+    
     context = {
-        'total'     : total,
-        'quantity'  : quantity,
-        'cart_items' : cart_items
+        'total': total,
+        'quantity': quantity,
+        'cart_items': cart_items
     }
     
-    return render(request,'cart.html',context)  
+    return render(request, 'cart.html', context)
