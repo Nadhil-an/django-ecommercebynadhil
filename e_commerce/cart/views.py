@@ -15,7 +15,6 @@ def add_cart(request,product_id):
     my_product = Product.objects.get(id=product_id)
 
     session_key = _cart_id(request)
-
     try:
         cart = Cart.objects.get(cart_id = session_key)
     except Cart.DoesNotExist:
@@ -31,8 +30,9 @@ def add_cart(request,product_id):
         cart_item = CartItem.objects.create(product=my_product,
                                             quantity = 1,
                                             cart=cart)
-    
     return redirect('cart')
+
+# quantity decrement
 
 def remove_cart(request,product_id):
     cart = Cart.objects.get(cart_id =_cart_id(request))
@@ -46,7 +46,14 @@ def remove_cart(request,product_id):
     return redirect('cart')
 
 
+# removing product from the cart
 
+def remove_cart_item(request,product_id):
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    product = get_object_or_404(Product,id=product_id)
+    cart_items = CartItem.objects.get(product=product,cart=cart)
+    cart_items.delete()
+    return redirect('cart')
 
 
 
