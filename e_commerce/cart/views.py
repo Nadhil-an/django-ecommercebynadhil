@@ -64,7 +64,9 @@ def cart(request, total=0, quantity=0, cart_item=None):
     cart = Cart.objects.get(cart_id=session_key)   
     cart_items = CartItem.objects.filter(cart=cart, is_active=True)
     
-    for cart_item in cart_items:   
+    for cart_item in cart_items:
+        tax =0
+        grant_total = 0   
         item_total = cart_item.quantity * cart_item.product.price
         cart_item.total = item_total  
         total += item_total  
