@@ -3,6 +3,7 @@ from . models import Product
 from catergory.models import Category
 from cart.views import add_cart,CartItem,_cart_id
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 
 # Create your views here.
 
@@ -48,3 +49,32 @@ def product_details(request, category_slug, product_slug):
     }
     return render(request, 'product_details.html', context)
 
+from django.shortcuts import render
+from .models import Product
+from django.db.models import Q
+from django.core.paginator import Paginator
+
+def search(request):
+
+    #getting the keyword value from the url
+    keyword = request.GET.get('keyword', '')
+    products = []
+    
+
+    #if keyword is available getting the products from the database based on product name and product description
+    if keyword:
+        products = Product.objects.filter(
+            Q(description__icontains=keyword) |
+            Q(product_name__icontains=keyword)
+        ).order_by('-created_date')
+#by searching the each page 6 products should be display
+    paginator = Paginator(products, 6)  # Show 6 products per page
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+
+    context = {
+        'products': paged_products,
+        'product_count': products.count(),
+        'product_number': int(page) if page else 1,
+    }
+    return render(request, 'store.html', context)
